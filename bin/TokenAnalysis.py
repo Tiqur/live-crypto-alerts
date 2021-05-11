@@ -1,5 +1,6 @@
 from bin.IntervalEnum import *
 from indicators.ema import *
+from indicators.sma import *
 import time
 
 class TokenAnalysis():
@@ -29,8 +30,7 @@ class TokenAnalysis():
             self.history += (time_interval, historical_data)
 
     def calc_emas(self):
-        print(self.history)
-        for i in range(len(self.history)):
+        for i in range(len(self.history[1])):
             print(i)
 
 
