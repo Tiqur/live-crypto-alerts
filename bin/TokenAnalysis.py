@@ -3,6 +3,7 @@ from bin.ohlcv import *
 from bin.IntervalHistory import *
 from indicators.ema import *
 from indicators.sma import *
+import numpy as np
 import time
 
 class TokenAnalysis():
@@ -13,7 +14,6 @@ class TokenAnalysis():
         self.ma_intervals = ma_intervals
         self.time_intervals = time_intervals
         self.history = []
-        self.emas = []
 
     def download_history(self):
         # Emas rely on previous emas.  Calculate extra for more precision
@@ -40,7 +40,19 @@ class TokenAnalysis():
 
     def calc_emas(self):
         for time_interval in self.history:
-            print(time_interval.ohlcv)
+            # Extract closing prices from specified interval
+            get_closing_price = np.vectorize(lambda c: c.close)
+            closing_prices = get_closing_price(time_interval.ohlcv)
+            
+            # For each ma interval
+            for ma in self.ma_intervals:
+                for i in range(len(closing_prices)):
+                    if i + ma <= len(closing_prices):
+                        data_range = np.array(closing_prices[i:i+ma])
+                        if i == 0:
+                            time_interval.emas.append(np_sma(data_range))
+                        else:
+                            time_interval.emas.append(np_ema(closing_prices[i], time_interval.emas[i-1], ma))
 
 
 
