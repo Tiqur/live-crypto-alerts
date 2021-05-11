@@ -1,4 +1,5 @@
 from bin.IntervalEnum import *
+from indicators.ema import *
 import time
 
 class TokenAnalysis():
@@ -26,6 +27,14 @@ class TokenAnalysis():
             historical_data = self.client.get_historical_klines(self.token, time_interval, str(start_time), str(current_time))
 
             self.history += (time_interval, historical_data)
+
+    def calc_emas(self):
+        print(self.history)
+        for i in range(len(self.history)):
+            print(i)
+
+
+
 
 
 
