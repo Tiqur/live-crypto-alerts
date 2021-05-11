@@ -1,5 +1,6 @@
 from bin.IntervalEnum import *
 from bin.ohlcv import *
+from bin.IntervalHistory import *
 from indicators.ema import *
 from indicators.sma import *
 import time
@@ -28,13 +29,18 @@ class TokenAnalysis():
             start_time = current_time - interval_sec
             historical_data = self.client.get_historical_klines(self.token, time_interval, str(start_time), str(current_time))
     
+            # Initialize interval history
+            ih = IntervalHistory(time_interval)
+
             # Organize data
             for data in historical_data:
-                self.history += (time_interval, Ohlvc(data))
-
+                ih.ohlcv.append(Ohlvc(data))
+            
+            self.history.append(ih)
 
     def calc_emas(self):
-        print(self.history)
+        for time_interval in self.history:
+            print(time_interval.ohlcv)
 
 
 
