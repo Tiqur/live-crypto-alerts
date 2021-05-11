@@ -3,16 +3,17 @@ import time
 
 
 class TokenAnalysis():
-    def __init__(self, client, token, time_intervals, ma_intervals):
+    def __init__(self, client, token, time_intervals, ma_intervals, precision):
         self.token = token
+        self.precision = precision
         self.client = client
         self.ma_intervals = ma_intervals
         self.time_intervals = time_intervals
         self.emas = []
 
     def download_history(self):
-        # Emas rely on previous emas.  Calculate extra for more percision
-        download_range = max(self.ma_intervals) * 2
+        # Emas rely on previous emas.  Calculate extra for more precision
+        download_range = max(self.ma_intervals) * self.precision
         
         # Download data for each time_interval and moving average range
         for time_interval in self.time_intervals:
