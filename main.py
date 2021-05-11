@@ -1,6 +1,8 @@
 from binance.client import Client
 from dotenv import load_dotenv
 from bin.TokenAnalysis import *
+from bin.live_updates import *
+import threading
 import os, time
 
 
@@ -8,12 +10,9 @@ import os, time
 load_dotenv()
 client = Client(os.getenv('API_KEY'), os.getenv('API_SECRET'))
 
-
+# TODO: Create a config for this
 # Coins to watch
-watchlist = ['DOGEUSDT', 'BTCUSDT', 'ETHUSDT']
-# trade, kline_1m, etc
-intervals = ['kline_1m']
-
+watchlist = ['DOGEUSDT', 'BTCUSDT', 'ETHUSDT', 'BCHUSDT']
 
 # Moving average intervals
 ma_intervals = [9, 13, 21, 55]
@@ -22,6 +21,9 @@ ma_intervals = [9, 13, 21, 55]
 precision = 4
 time_intervals = [Client.KLINE_INTERVAL_1MINUTE]
 
+
+live_updates_thread = threading.Thread(target=live_updates)
+live_updates_thread.start()
 
 
 
@@ -34,16 +36,6 @@ for token in watchlist:
 
     
 
-
-#from unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager import BinanceWebSocketApiManager
-#
-#binance_websocket_api_manager = BinanceWebSocketApiManager(exchange="binance.com")
-#binance_websocket_api_manager.create_stream(['kline_1m'], ['dogeusdt'])
-#
-#while True:
-#    oldest_stream_data_from_stream_buffer = binance_websocket_api_manager.pop_stream_data_from_stream_buffer()
-#    if oldest_stream_data_from_stream_buffer:
-#        print(oldest_stream_data_from_stream_buffer)
 
 
 
