@@ -31,10 +31,7 @@ class TokenAnalysis():
 
                 # Convert binance kline to seconds
                 interval_sec = interval_to_sec(time_interval) * download_range
-                current_time = time.time()
-                start_time = current_time - interval_sec
-                historical_data = self.client.get_historical_klines(self.token, time_interval, str(start_time)) 
-
+                historical_data = self.client.get_historical_klines(self.token, time_interval, f'{interval_sec} seconds ago UTC')
 
                 # Test if download is optimized
                 #print(f"{len(historical_data)} / {ma_interval}: {len(historical_data) / ma_interval} == {self.precision}")

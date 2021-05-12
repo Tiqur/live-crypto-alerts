@@ -50,7 +50,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                             # Append new candle 
                             interval_history.ohlcv.append(ohlcv)
 
-                            # Remove first element
+                            # Remove first element so that there is only ever ( ema_interval * percision ) amount of items in list
                             del interval_history.ohlcv[0]
                 
 
@@ -62,7 +62,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                             closing_prices = get_closing_price(interval_history.ohlcv)
 
                             # Calculate live ema for each time interval
-                            data_range = np.array(closing_prices[len(closing_prices):-1])
+                            data_range = np.array(closing_prices[-ma:])
                             ema = np_ema(closing_prices[-1], interval_history.emas[-1], ma)
                             print(ma, ema)
 
