@@ -36,7 +36,6 @@ def live_updates(intervals, tokens, exchange, token_instances):
                 if token in token_instances:
                     token_instance = token_instances[token]
                     
-                    print(token_instance.history[-1].ohlcv[-1].close)
 
                     # For each time_interval in token analysis instance history
                     for time_interval in token_instance.history:
@@ -49,6 +48,10 @@ def live_updates(intervals, tokens, exchange, token_instances):
                         else:
                             # Append new candle 
                             time_interval.ohlcv.append(ohlcv)
+
+                            # Remove first element
+                            del time_interval.ohlcv[0]
+                
 
 
                     

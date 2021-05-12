@@ -16,13 +16,15 @@ class TokenAnalysis():
         self.history = []
 
     def download_history(self):
-        
         # Download data for each time_interval and moving average range
         for time_interval in self.time_intervals:
-            print(f"Downloading {time_interval} data for {self.token} {self.time_intervals.index(time_interval)+1}/{len(self.time_intervals)}")
+            print(f" - Downloading {time_interval}:")
 
             # Optimize downloads by only downloaded the necessary data per token
             for ma_interval in self.ma_intervals:
+
+                # Print current interval
+                print(f" | > {ma_interval}")
 
                 # Emas rely on previous emas.  Calculate extra for more precision
                 download_range = ma_interval * self.precision
@@ -45,6 +47,7 @@ class TokenAnalysis():
                     ih.ohlcv.append(Ohlvc(data))
                 
                 self.history.append(ih)
+
 
     def calc_emas(self):
         for time_interval in self.history:

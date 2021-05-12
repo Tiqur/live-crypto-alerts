@@ -24,6 +24,7 @@ with open('config.yml', 'r') as ymlfile:
 
     # Download historical token data
     for token in config['watchlist']:
+        print(f"Downloading data for {token}...")
         token_analysis = TokenAnalysis(client, token, config['time_intervals'], config['ema_intervals'], config['precision'])
         token_analysis.download_history()
         token_analysis.calc_emas()
