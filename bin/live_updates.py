@@ -57,14 +57,9 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                         print(f"--------{token}--------")
                         # For each ma interval
                         for ma in ema_intervals:
-                            # Extract closing prices from specified interval
-                            get_closing_price = np.vectorize(lambda c: c.close)
-                            closing_prices = get_closing_price(interval_history.ohlcv)
-
                             # Calculate live ema for each time interval
-                            data_range = np.array(closing_prices[-ma:])
-                            ema = np_ema(closing_prices[-1], interval_history.emas[-1], ma)
-                            print(ma, ema)
+                            ema = np_ema(interval_history.ohlcv[-1].close, interval_history.emas[-1], ma)
+                            print(f"EMA {ma}: {ema}")
 
                     
 

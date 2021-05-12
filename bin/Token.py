@@ -6,7 +6,7 @@ from indicators.sma import *
 import numpy as np
 import time, sys
 
-class TokenAnalysis():
+class Token():
     def __init__(self, client, token, time_intervals, ma_intervals, precision, progress_bar):
         self.token = token
         self.precision = precision
@@ -15,6 +15,16 @@ class TokenAnalysis():
         self.time_intervals = time_intervals
         self.progress_bar = progress_bar
         self.history = []
+
+    def __repr__(self):
+        return(f"""
+-------Token-------
+Token: {self.token}
+Precision: {self.precision}
+Moving Average Intervals: {self.ma_intervals}
+Time Intervals: {self.time_intervals}
+History: {self.history}
+---------------------------""")
 
     def download_history(self):
         # Download data for each time_interval and moving average range

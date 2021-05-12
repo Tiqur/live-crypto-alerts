@@ -1,6 +1,6 @@
 from binance.client import Client
 from dotenv import load_dotenv
-from bin.TokenAnalysis import *
+from bin.Token import *
 from bin.live_updates import *
 from progress.bar import Bar
 import threading
@@ -32,7 +32,8 @@ with open('config.yml', 'r') as ymlfile:
                 fill='█',
                 suffix='%(percent).1f%% - %(eta)ds')
 
-        token_analysis = TokenAnalysis(client, token, config['time_intervals'], config['ema_intervals'], config['precision'], progress_bar)
+        token_analysis = Token(client, token, config['time_intervals'], config['ema_intervals'], config['precision'], progress_bar)
         token_analysis.download_history()
         token_analysis.calc_emas()
         token_instances.update({token: token_analysis})
+        print(token_analysis)
