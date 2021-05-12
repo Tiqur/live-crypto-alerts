@@ -19,7 +19,7 @@ ma_intervals = [9, 13, 21, 55]
 # Amount of data relative to maximum interval to download. ( max_interval * precision )
 # So if max_interval equals 55 and precision equals 2, then it would download 110 records for each interval
 precision = 4
-time_intervals = [Client.KLINE_INTERVAL_1MINUTE, Client.KLINE_INTERVAL_3MINUTE, Client.KLINE_INTERVAL_5MINUTE, Client.KLINE_INTERVAL_15MINUTE, Client.KLINE_INTERVAL_30MINUTE]
+time_intervals = ['1m', '3m', '5m', '15m' '30m']
 
 
 # Start websocket connections ( get live token data )
