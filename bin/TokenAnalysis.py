@@ -4,27 +4,27 @@ from bin.IntervalHistory import *
 from indicators.ema import *
 from indicators.sma import *
 import numpy as np
-import time
+import time, sys
 
 class TokenAnalysis():
-    def __init__(self, client, token, time_intervals, ma_intervals, precision):
+    def __init__(self, client, token, time_intervals, ma_intervals, precision, progress_bar):
         self.token = token
         self.precision = precision
         self.client = client
         self.ma_intervals = ma_intervals
         self.time_intervals = time_intervals
+        self.progress_bar = progress_bar
         self.history = []
 
     def download_history(self):
         # Download data for each time_interval and moving average range
         for time_interval in self.time_intervals:
-            print(f" - Downloading {time_interval}:")
 
             # Optimize downloads by only downloaded the necessary data per token
             for ma_interval in self.ma_intervals:
 
-                # Print current interval
-                print(f" | > {ma_interval}")
+                # Fill progress bar
+                self.progress_bar.next()
 
                 # Emas rely on previous emas.  Calculate extra for more precision
                 download_range = ma_interval * self.precision
@@ -47,6 +47,13 @@ class TokenAnalysis():
                     ih.ohlcv.append(Ohlvc(data))
                 
                 self.history.append(ih)
+
+        # End progress bar
+        self.progress_bar.finish()
+        # Delete progress bar
+        sys.stdout.write("\033[F") #back to previous line 
+        sys.stdout.write("\033[K") #clear line 
+
 
 
     def calc_emas(self):

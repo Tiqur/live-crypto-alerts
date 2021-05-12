@@ -2,6 +2,7 @@ from binance.client import Client
 from dotenv import load_dotenv
 from bin.TokenAnalysis import *
 from bin.live_updates import *
+from progress.bar import Bar
 import threading
 import os, yaml
 token_instances = {}
@@ -25,7 +26,13 @@ with open('config.yml', 'r') as ymlfile:
     # Download historical token data
     for token in config['watchlist']:
         print(f"Downloading data for {token}...")
-        token_analysis = TokenAnalysis(client, token, config['time_intervals'], config['ema_intervals'], config['precision'])
+
+        progress_bar = Bar('', 
+                max=(len(config['time_intervals']) * len(config['ema_intervals'])),
+                fill='█',
+                suffix='%(percent).1f%% - %(eta)ds')
+
+        token_analysis = TokenAnalysis(client, token, config['time_intervals'], config['ema_intervals'], config['precision'], progress_bar)
         token_analysis.download_history()
         token_analysis.calc_emas()
         token_instances.update({token: token_analysis})
