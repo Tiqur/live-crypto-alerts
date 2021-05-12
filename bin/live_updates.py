@@ -40,6 +40,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                     
                     # For each time_interval in token analysis instance history
                     for interval_history in token_instance.history:
+                        print(interval_history)
                         time_between = ohlcv.start_time / 1000 - interval_history.ohlcv[-1].end_time / 1000
     
                         # If on the same candle as last downloaded

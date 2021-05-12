@@ -18,13 +18,14 @@ class Token():
 
     def __repr__(self):
         return(f"""
+
 -------Token-------
 Token: {self.token}
 Precision: {self.precision}
 Moving Average Intervals: {self.ma_intervals}
 Time Intervals: {self.time_intervals}
-History: {self.history}
----------------------------""")
+History: {self.history}\n
+""")
 
     def download_history(self):
         # Download data for each time_interval and moving average range

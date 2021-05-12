@@ -8,3 +8,15 @@ class Ohlvc():
         self.volume = float(data[5])
         self.end_time = float(data[6])
 
+    
+    def __repr__(self):
+        return(f"""
+
+-------OHLVC--------
+Start Time: {self.start_time}
+End Time: {self.end_time}
+Open: {self.open}
+High: {self.high}
+Low: {self.low}
+Close: {self.close}
+Volume: {self.volume}""")
