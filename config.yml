@@ -1,0 +1,21 @@
+# Coins to watch
+watchlist: ['DOGEUSDT', 'BTCUSDT', 'ETHUSDT', 'BCHUSDT']
+
+# Amount of data relative to maximum interval to download. ( max_interval * precision )
+# So if max_interval equals 55 and precision equals 2, then it would download 110 records for each interval
+precision: 4
+
+# Time intervals to watch token
+time_intervals:
+  - 1m
+  - 3m
+  - 5m
+  - 15m
+  - 30m
+
+# Exponential moving average intervals
+ema_intervals:
+  - 9
+  - 13
+  - 21
+  - 55

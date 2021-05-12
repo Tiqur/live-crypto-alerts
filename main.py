@@ -3,35 +3,29 @@ from dotenv import load_dotenv
 from bin.TokenAnalysis import *
 from bin.live_updates import *
 import threading
-import os, time
+import os, yaml
 
 
 # Load env variables
 load_dotenv()
 client = Client(os.getenv('API_KEY'), os.getenv('API_SECRET'))
 
-# TODO: Create a config for this
-# Coins to watch
-watchlist = ['DOGEUSDT', 'BTCUSDT', 'ETHUSDT', 'BCHUSDT']
+# Load yaml config
+with open('config.yml', 'r') as ymlfile:
+    try:
+        config = yaml.safe_load(ymlfile)
+    except yaml.YAMLError as err:
+        print(err)
+    
+    # Start websocket connections ( get live token data )
+    live_updates_thread = threading.Thread(target=live_updates, args=(config['time_intervals'], config['watchlist'], 'binance.com'))
+    live_updates_thread.start()
 
-# Moving average intervals
-ma_intervals = [9, 13, 21, 55]
-# Amount of data relative to maximum interval to download. ( max_interval * precision )
-# So if max_interval equals 55 and precision equals 2, then it would download 110 records for each interval
-precision = 4
-time_intervals = ['1m', '3m', '5m', '15m' '30m']
-
-
-# Start websocket connections ( get live token data )
-live_updates_thread = threading.Thread(target=live_updates, args=(time_intervals, watchlist, 'binance.com'))
-live_updates_thread.start()
-
-
-# Download historical token data
-for token in watchlist:
-    token_analysis = TokenAnalysis(client, token, time_intervals, ma_intervals, precision)
-    token_analysis.download_history()
-    token_analysis.calc_emas()
+    # Download historical token data
+    for token in config['watchlist']:
+        token_analysis = TokenAnalysis(client, token, config['time_intervals'], config['ema_intervals'], config['precision'])
+        token_analysis.download_history()
+        token_analysis.calc_emas()
 
 
 
