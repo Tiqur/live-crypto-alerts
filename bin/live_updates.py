@@ -36,7 +36,7 @@ def live_updates(intervals, tokens, exchange, token_instances):
                 if token in token_instances:
                     token_instance = token_instances[token]
                     
-                    print(len(token_instance.history[0].ohlcv))
+                    print(token_instance.history[-1].ohlcv[-1].close)
 
                     # For each time_interval in token analysis instance history
                     for time_interval in token_instance.history:
@@ -45,7 +45,7 @@ def live_updates(intervals, tokens, exchange, token_instances):
                         # If on the same candle as last downloaded
                         if time_between < 0:
                             # Update price
-                            time_interval.ohlcv[-1].close_price = ohlcv.close
+                            time_interval.ohlcv[-1].close = ohlcv.close
                         else:
                             # Append new candle 
                             time_interval.ohlcv.append(ohlcv)
