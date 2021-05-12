@@ -20,7 +20,7 @@ with open('config.yml', 'r') as ymlfile:
         print(err)
     
     # Start websocket connections ( get live token data )
-    live_updates_thread = threading.Thread(target=live_updates, args=(config['time_intervals'], config['watchlist'], 'binance.com', token_instances))
+    live_updates_thread = threading.Thread(target=live_updates, args=(config['time_intervals'], config['ema_intervals'], config['watchlist'], 'binance.com', token_instances))
     live_updates_thread.start()
 
     # Download historical token data

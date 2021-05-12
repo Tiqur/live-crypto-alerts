@@ -9,9 +9,6 @@ precision: 4
 time_intervals:
   - 1m
   - 3m
-  - 5m
-  - 15m
-  - 30m
 
 # Exponential moving average intervals
 ema_intervals:

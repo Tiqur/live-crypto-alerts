@@ -1,7 +1,10 @@
 from unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager import BinanceWebSocketApiManager
+from indicators.ema import *
 from bin.ohlcv import *
+import numpy as np
 
-def live_updates(intervals, tokens, exchange, token_instances):
+
+def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
     binance_websocket_api_manager = BinanceWebSocketApiManager(exchange=exchange)
     parsed_intervals = list(map(lambda i: f"kline_{i}", intervals))
     binance_websocket_api_manager.create_stream(parsed_intervals, tokens, output="UnicornFy")
@@ -31,28 +34,37 @@ def live_updates(intervals, tokens, exchange, token_instances):
                 ohlcv = Ohlvc(ohlcv_data)
                 token = data["symbol"]
                 
-
                 # For each token
                 if token in token_instances:
                     token_instance = token_instances[token]
                     
-
                     # For each time_interval in token analysis instance history
-                    for time_interval in token_instance.history:
-                        time_between = ohlcv.start_time / 1000 - time_interval.ohlcv[-1].end_time / 1000
+                    for interval_history in token_instance.history:
+                        time_between = ohlcv.start_time / 1000 - interval_history.ohlcv[-1].end_time / 1000
     
                         # If on the same candle as last downloaded
                         if time_between < 0:
                             # Update price
-                            time_interval.ohlcv[-1].close = ohlcv.close
+                            interval_history.ohlcv[-1].close = ohlcv.close
                         else:
                             # Append new candle 
-                            time_interval.ohlcv.append(ohlcv)
+                            interval_history.ohlcv.append(ohlcv)
 
                             # Remove first element
-                            del time_interval.ohlcv[0]
+                            del interval_history.ohlcv[0]
                 
 
+                        print(f"--------{token}--------")
+                        # For each ma interval
+                        for ma in ema_intervals:
+                            # Extract closing prices from specified interval
+                            get_closing_price = np.vectorize(lambda c: c.close)
+                            closing_prices = get_closing_price(interval_history.ohlcv)
+
+                            # Calculate live ema for each time interval
+                            data_range = np.array(closing_prices[len(closing_prices):-1])
+                            ema = np_ema(closing_prices[-1], interval_history.emas[-1], ma)
+                            print(ma, ema)
 
                     
 
