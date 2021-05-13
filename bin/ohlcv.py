@@ -1,12 +1,15 @@
+from decimal import Decimal
+
+
 class Ohlvc():
     def __init__(self, data):
         self.start_time = data[0]
-        self.open = float(data[1])
-        self.high = float(data[2])
-        self.low = float(data[3])
-        self.close = float(data[4])
-        self.volume = float(data[5])
-        self.end_time = float(data[6])
+        self.open = Decimal(data[1])
+        self.high = Decimal(data[2])
+        self.low = Decimal(data[3])
+        self.close = Decimal(data[4])
+        self.volume = Decimal(data[5])
+        self.end_time = Decimal(data[6])
 
     
     def __repr__(self):

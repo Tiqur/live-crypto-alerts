@@ -72,16 +72,15 @@ History: {self.history}\n
             
             # For each ma interval
             for ma in self.ma_intervals:
-                for i in range(len(closing_prices)):
-                    if i + ma <= len(closing_prices):
-                        data_range = np.array(closing_prices[i:i+ma])
-                        if i == 0:
-                            time_interval.emas.append(np_sma(data_range))
-                        else:
-                            time_interval.emas.append(np_ema(closing_prices[i], time_interval.emas[i-1], ma))
 
+                # Calculate SMA for first range, then delete from list to avoid using data from the future
+                data_range = closing_prices[:ma]
+                time_interval.emas.append(np_sma(data_range))
+                
+                # List without the first (ma) elements
+                new_data_range = closing_prices[ma:]
 
-
-
-
-
+                for i in range(len(new_data_range)):
+                    time_interval.emas.append(np_ema(new_data_range[i], time_interval.emas[-1], ma))
+                    
+                    

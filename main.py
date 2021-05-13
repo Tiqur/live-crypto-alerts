@@ -36,4 +36,3 @@ with open('config.yml', 'r') as ymlfile:
         token_analysis.download_history()
         token_analysis.calc_emas()
         token_instances.update({token: token_analysis})
-        print(token_analysis)

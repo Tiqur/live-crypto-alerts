@@ -1,4 +1,5 @@
 from unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager import BinanceWebSocketApiManager
+from decimal import Decimal
 from indicators.ema import *
 from bin.ohlcv import *
 import numpy as np
@@ -40,8 +41,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                     
                     # For each time_interval in token analysis instance history
                     for interval_history in token_instance.history:
-                        print(interval_history)
-                        time_between = ohlcv.start_time / 1000 - interval_history.ohlcv[-1].end_time / 1000
+                        time_between = Decimal(ohlcv.start_time) / 1000 - interval_history.ohlcv[-1].end_time / 1000
     
                         # If on the same candle as last downloaded
                         if time_between < 0:
@@ -61,6 +61,10 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                             # Calculate live ema for each time interval
                             ema = np_ema(interval_history.ohlcv[-1].close, interval_history.emas[-1], ma)
                             print(f"EMA {ma}: {ema}")
+                            print(f"EMAs: {interval_history.emas}")
+                            get_closing_price = np.vectorize(lambda c: c.close)
+                            closing_prices = get_closing_price(interval_history.ohlcv)
+                            print(f"Closing Prices: {closing_prices}")
 
                     
 

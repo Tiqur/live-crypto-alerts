@@ -7,7 +7,7 @@ precision: 4
 
 # Time intervals to watch token
 time_intervals:
-  - 1m
+  - 1M
 
 # Exponential moving average intervals
 ema_intervals:
