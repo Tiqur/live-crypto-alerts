@@ -1,4 +1,4 @@
-class IntervalHistory():
+class TimeInterval():
     def __init__(self, interval):
         self.interval = interval
         self.emas = []

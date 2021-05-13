@@ -1,18 +1,19 @@
 from bin.IntervalEnum import *
-from bin.ohlcv import *
-from bin.IntervalHistory import *
+from bin.TimeInterval import *
+from bin.MovingAverageInterval import *
 from indicators.ema import *
 from indicators.sma import *
+from bin.ohlcv import *
 import numpy as np
 import time, sys
 
 class Token():
-    def __init__(self, client, token, time_intervals, ma_intervals, precision, progress_bar):
+    def __init__(self, client, token, time_ranges, ma_ranges, precision, progress_bar):
         self.token = token
         self.precision = precision
         self.client = client
-        self.ma_intervals = ma_intervals
-        self.time_intervals = time_intervals
+        self.ma_ranges = ma_ranges
+        self.time_ranges = time_ranges
         self.progress_bar = progress_bar
         self.history = []
 
@@ -22,39 +23,40 @@ class Token():
 -------Token-------
 Token: {self.token}
 Precision: {self.precision}
-Moving Average Intervals: {self.ma_intervals}
-Time Intervals: {self.time_intervals}
+Moving Average Intervals: {self.ma_ranges}
+Time Intervals: {self.time_ranges}
 History: {self.history}\n
 """)
 
     def download_history(self):
-        # Download data for each time_interval and moving average range
-        for time_interval in self.time_intervals:
+        # Download data for each time_range and moving average range
+        for time_range in self.time_ranges:
+
+            # Initialize interval history
+            ih = TimeInterval(time_range)
 
             # Optimize downloads by only downloaded the necessary data per token
-            for ma_interval in self.ma_intervals:
+            for ma_range in self.ma_ranges:
 
                 # Fill progress bar
                 self.progress_bar.next()
 
                 # Emas rely on previous emas.  Calculate extra for more precision
-                download_range = ma_interval * self.precision
+                download_range = ma_range * self.precision
 
                 # Convert binance kline to seconds
-                interval_sec = interval_to_sec(time_interval) * download_range
-                historical_data = self.client.get_historical_klines(self.token, time_interval, f'{interval_sec} seconds ago UTC')
+                interval_sec = interval_to_sec(time_range) * download_range
+                historical_data = self.client.get_historical_klines(self.token, time_range, f'{interval_sec} seconds ago UTC')
 
                 # Test if download is optimized
-                #print(f"{len(historical_data)} / {ma_interval}: {len(historical_data) / ma_interval} == {self.precision}")
+                #print(f"{len(historical_data)} / {ma_range}: {len(historical_data) / ma_range} == {self.precision}")
         
-                # Initialize interval history
-                ih = IntervalHistory(time_interval)
 
                 # Organize data
                 for data in historical_data:
                     ih.ohlcv.append(Ohlvc(data))
                 
-                self.history.append(ih)
+            self.history.append(ih)
 
         # End progress bar
         self.progress_bar.finish()
@@ -71,7 +73,7 @@ History: {self.history}\n
             closing_prices = get_closing_price(time_interval.ohlcv)
             
             # For each ma interval
-            for ma in self.ma_intervals:
+            for ma in self.ma_ranges:
 
                 # Calculate SMA for first range, then delete from list to avoid using data from the future
                 data_range = closing_prices[:ma]

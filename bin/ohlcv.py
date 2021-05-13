@@ -3,7 +3,7 @@ from decimal import Decimal
 
 class Ohlvc():
     def __init__(self, data):
-        self.start_time = data[0]
+        self.start_time = Decimal(data[0])
         self.open = Decimal(data[1])
         self.high = Decimal(data[2])
         self.low = Decimal(data[3])
