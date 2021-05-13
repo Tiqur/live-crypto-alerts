@@ -3,10 +3,7 @@ from dotenv import load_dotenv
 from bin.Token import *
 from bin.live_updates import *
 from progress.bar import Bar
-import threading
-import os, yaml
-import asyncio
-import websockets
+import os, yaml, json, asyncio, websockets, threading
 token_instances = {}
 alerts = []
 
@@ -19,7 +16,7 @@ client = Client(os.getenv('API_KEY'), os.getenv('API_SECRET'))
 async def server(websocket, path):
     while True:
         if alerts:
-            await websocket.send(str(alerts.pop()))
+            await websocket.send(json.dumps(alerts.pop()))
 
 # Start websocket server
 def start_server():
