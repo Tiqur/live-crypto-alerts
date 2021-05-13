@@ -22,6 +22,6 @@ class MovingAverageInterval():
             # List without the first (ma) elements
             new_data_range = closing_prices[self.ma_interval:]
 
-            for i in range(len(new_data_range)):
+            for i in range(len(new_data_range)-1):
                 self.emas.append(np_ema(new_data_range[i], self.emas[-1], self.ma_interval))
 

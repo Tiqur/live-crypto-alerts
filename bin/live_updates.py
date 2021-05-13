@@ -68,19 +68,22 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                                 del moving_average_instance.ohlcv[0]
                                 del moving_average_instance.emas[0]
                 
+                        
+                        # Hold emas  
+                        emas = []
 
-                        print(f"--------{token}--------")
                         # For each ma interval
                         for moving_average_instance in time_interval_instance.moving_average_instances:
                             # Calculate live ema for each time interval
                             ema = np_ema(moving_average_instance.ohlcv[-1].close, moving_average_instance.emas[-1], moving_average_instance.ma_interval)
-                            print(f"EMA {moving_average_instance.ma_interval}: {ema}")
+                            emas.append(ema)
 
-                            get_closing_price = np.vectorize(lambda c: c.close)
-                            closing_prices = get_closing_price(moving_average_instance.ohlcv)
-                            print(f"Closing: {moving_average_instance.emas}")
-
-                    
+                        
+                        # Test if emas are bullish
+                        if sorted(emas, reverse=True) == emas:
+                            print(f"{token} bullish")
+                        elif sorted(emas) == emas:
+                            print(f"{token} bearish")
 
                     
 
