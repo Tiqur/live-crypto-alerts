@@ -55,11 +55,18 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                                 # Update price
                                 moving_average_instance.ohlcv[-1].close = ohlcv.close
                             else:
+                                # Previous ema
+                                ema = np_ema(moving_average_instance.ohlcv[-1].close, moving_average_instance.emas[-1], moving_average_instance.ma_interval)
+
+                                # Append previous ema
+                                moving_average_instance.emas.append(ema)
+
                                 # Append new candle 
                                 moving_average_instance.ohlcv.append(ohlcv)
 
                                 # Remove first element so that there is only ever ( ema_interval * percision ) amount of items in list
                                 del moving_average_instance.ohlcv[0]
+                                del moving_average_instance.emas[0]
                 
 
                         print(f"--------{token}--------")
@@ -68,6 +75,10 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                             # Calculate live ema for each time interval
                             ema = np_ema(moving_average_instance.ohlcv[-1].close, moving_average_instance.emas[-1], moving_average_instance.ma_interval)
                             print(f"EMA {moving_average_instance.ma_interval}: {ema}")
+
+                            get_closing_price = np.vectorize(lambda c: c.close)
+                            closing_prices = get_closing_price(moving_average_instance.ohlcv)
+                            print(f"Closing: {moving_average_instance.emas}")
 
                     
 
