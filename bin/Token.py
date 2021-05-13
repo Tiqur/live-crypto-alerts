@@ -45,7 +45,7 @@ History: {self.time_interval_instances}\n
                 # Convert binance kline to seconds
                 interval_sec = interval_to_sec(time_range) * download_range
                 historical_data = self.client.get_historical_klines(self.token, time_range, f'{interval_sec} seconds ago UTC')
-                print(f"\nLen: {len(historical_data)} MaInterval: {ma_range} CandleInterval: {time_range}")
+                #print(f"\nLen: {len(historical_data)} MaInterval: {ma_range} CandleInterval: {time_range}")
 
                 # Organize data
                 for data in historical_data:

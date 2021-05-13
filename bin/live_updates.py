@@ -3,6 +3,7 @@ from decimal import Decimal
 from indicators.ema import *
 from bin.ohlcv import *
 import numpy as np
+import time
 
 
 def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, alerts):
@@ -81,15 +82,35 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
 
                         sorted1 = sorted(emas.items(), key=lambda x: x[1], reverse=True)
                         sorted2 = list(map(lambda x: x[0], sorted1))
-                        
-                        alerts.append({"token": sorted2, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2})
-                        print(f"{token}: Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
-                        ## Test if emas are bullish
-                        #if sorted(emas, reverse=True) == emas:
-                        #    print(f"{token} bullish")
-                        #elif sorted(emas) == emas:
-                        #    print(f"{token} bearish")
 
+                        # Current time in seconds
+                        current_time = time.time()
+
+                       # if time_interval_instance.ema4 != sorted2:
+                       #     alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
+                       #     print(f"{token}: Time: {current_time} Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
+                        
+
+
+                        # Test if emas are bullish
+                        if sorted(sorted2) == sorted2:
+                            if time_interval_instance.flag == 0:
+                                time_interval_instance.flag = 1
+                                alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
+                                print(f" BULLISH {token}: Time: {current_time} Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
+                        else:
+                            time_interval_instance.flag = 0
+                        
+
+                        #if sorted(sorted2, reverse=False) == sorted2 and time_interval_instance.flag == 0:
+                        #    time_interval_instance.flag = 1
+                        #    alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
+                        #    print(f" BULLISH {token}: Time: {current_time} Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
+
+                        ## Else
+                        #elif time_interval_instance.flag == 1: 
+                        #    time_interval_instance.flag = 0
+                        #    alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
                     
 
 
