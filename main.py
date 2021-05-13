@@ -8,6 +8,7 @@ import os, yaml
 import asyncio
 import websockets
 token_instances = {}
+alerts = []
 
 
 # Load env variables
@@ -16,9 +17,9 @@ client = Client(os.getenv('API_KEY'), os.getenv('API_SECRET'))
 
 # Initialize server
 async def server(websocket, path):
-    print(websocket)
-    async for message in websocket:
-        await websocket.send("Test")
+    while True:
+        if alerts:
+            await websocket.send(str(alerts.pop()))
 
 # Start websocket server
 def start_server():
@@ -41,7 +42,7 @@ with open('config.yml', 'r') as ymlfile:
     websocket_server.start()
 
     # Start websocket connections ( get live token data )
-    live_updates_thread = threading.Thread(target=live_updates, args=(config['time_intervals'], config['ema_intervals'], config['watchlist'], 'binance.com', token_instances))
+    live_updates_thread = threading.Thread(target=live_updates, args=(config['time_intervals'], config['ema_intervals'], config['watchlist'], 'binance.com', token_instances, alerts))
     live_updates_thread.start()
 
     # Download historical token data

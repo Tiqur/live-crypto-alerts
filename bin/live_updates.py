@@ -5,7 +5,7 @@ from bin.ohlcv import *
 import numpy as np
 
 
-def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
+def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, alerts):
     binance_websocket_api_manager = BinanceWebSocketApiManager(exchange=exchange)
     parsed_intervals = list(map(lambda i: f"kline_{i}", intervals))
     binance_websocket_api_manager.create_stream(parsed_intervals, tokens, output="UnicornFy")
@@ -77,12 +77,13 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                             # Calculate live ema for each time interval
                             ema = np_ema(moving_average_instance.ohlcv[-1].close, moving_average_instance.emas[-1], moving_average_instance.ma_interval)
                             emas.update({moving_average_instance.ma_interval: ema})
-                            print(f"{moving_average_instance.ma_interval}: {round(ema, 5)}")
+                            #print(f"{moving_average_instance.ma_interval}: {round(ema, 5)}")
 
                         sorted1 = sorted(emas.items(), key=lambda x: x[1], reverse=True)
                         sorted2 = list(map(lambda x: x[0], sorted1))
-
-                        print(f"{token}: EMA: {time_interval_instance.candle_time_interval}: {sorted2}")
+                        
+                        alerts.append({"token": sorted2, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2})
+                        print(f"{token}: Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2}")
                         ## Test if emas are bullish
                         #if sorted(emas, reverse=True) == emas:
                         #    print(f"{token} bullish")
