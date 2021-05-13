@@ -11,4 +11,4 @@ time_intervals:
 
 # Exponential moving average intervals
 ema_intervals:
-  - 55
+  - 9

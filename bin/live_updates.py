@@ -40,27 +40,34 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                     token_instance = token_instances[token]
                     
                     # For each time_interval in token analysis instance history
-                    for interval_history in token_instance.history:
-                        time_between = ohlcv.start_time / 1000 - interval_history.ohlcv[-1].end_time / 1000
-    
-                        # If on the same candle as last downloaded
-                        if time_between < 0:
-                            # Update price
-                            interval_history.ohlcv[-1].close = ohlcv.close
-                        else:
-                            # Append new candle 
-                            interval_history.ohlcv.append(ohlcv)
+                    for time_interval_instance in token_instance.time_interval_instances:
+                        time_interval = time_interval_instance.candle_time_interval
 
-                            # Remove first element so that there is only ever ( ema_interval * percision ) amount of items in list
-                            del interval_history.ohlcv[0]
+                        for moving_average_instance in time_interval_instance.moving_average_instances:
+                            ma_interval = moving_average_instance.ma_interval
+
+                            # Calculate the time between the current time, and the previous candle's end time.
+                            # This will show us if we should update the current candle's close_price, or create a new candle
+                            time_between = ohlcv.start_time / 1000 - moving_average_instance.ohlcv[-1].end_time / 1000
+
+                            # If on the same candle as last downloaded
+                            if time_between < 0:
+                                # Update price
+                                moving_average_instance.ohlcv[-1].close = ohlcv.close
+                            else:
+                                # Append new candle 
+                                moving_average_instance.ohlcv.append(ohlcv)
+
+                                # Remove first element so that there is only ever ( ema_interval * percision ) amount of items in list
+                                del moving_average_instance.ohlcv[0]
                 
 
                         print(f"--------{token}--------")
                         # For each ma interval
-                        for ma in ema_intervals:
+                        for moving_average_instance in time_interval_instance.moving_average_instances:
                             # Calculate live ema for each time interval
-                            ema = np_ema(interval_history.ohlcv[-1].close, interval_history.emas[-1], ma)
-                            print(f"EMA {ma}: {ema}")
+                            ema = np_ema(moving_average_instance.ohlcv[-1].close, moving_average_instance.emas[-1], moving_average_instance.ma_interval)
+                            print(f"EMA {moving_average_instance.ma_interval}: {ema}")
 
                     
 

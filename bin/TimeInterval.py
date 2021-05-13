@@ -1,8 +1,7 @@
 class TimeInterval():
     def __init__(self, interval):
-        self.interval = interval
-        self.emas = []
-        self.ohlcv = []
+        self.candle_time_interval = interval
+        self.moving_average_instances = []
 
     def __repr__(self):
         return(f"""
