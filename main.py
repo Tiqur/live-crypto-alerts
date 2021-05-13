@@ -5,6 +5,8 @@ from bin.live_updates import *
 from progress.bar import Bar
 import threading
 import os, yaml
+import asyncio
+import websockets
 token_instances = {}
 
 
@@ -12,13 +14,32 @@ token_instances = {}
 load_dotenv()
 client = Client(os.getenv('API_KEY'), os.getenv('API_SECRET'))
 
+# Initialize server
+async def server(websocket, path):
+    print(websocket)
+    async for message in websocket:
+        await websocket.send("Test")
+
+# Start websocket server
+def start_server():
+    asyncio.set_event_loop(asyncio.new_event_loop())
+    start_server = websockets.serve(server, "localhost", 5000)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+
+
 # Load yaml config
 with open('config.yml', 'r') as ymlfile:
     try:
         config = yaml.safe_load(ymlfile)
     except yaml.YAMLError as err:
         print(err)
-    
+
+
+    # Start local websocket server
+    websocket_server = threading.Thread(target=start_server)
+    websocket_server.start()
+
     # Start websocket connections ( get live token data )
     live_updates_thread = threading.Thread(target=live_updates, args=(config['time_intervals'], config['ema_intervals'], config['watchlist'], 'binance.com', token_instances))
     live_updates_thread.start()

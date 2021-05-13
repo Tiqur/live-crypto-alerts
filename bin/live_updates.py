@@ -70,20 +70,24 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances):
                 
                         
                         # Hold emas  
-                        emas = []
+                        emas = {}
 
                         # For each ma interval
                         for moving_average_instance in time_interval_instance.moving_average_instances:
                             # Calculate live ema for each time interval
                             ema = np_ema(moving_average_instance.ohlcv[-1].close, moving_average_instance.emas[-1], moving_average_instance.ma_interval)
-                            emas.append(ema)
+                            emas.update({moving_average_instance.ma_interval: ema})
+                            print(f"{moving_average_instance.ma_interval}: {round(ema, 5)}")
 
-                        
-                        # Test if emas are bullish
-                        if sorted(emas, reverse=True) == emas:
-                            print(f"{token} bullish")
-                        elif sorted(emas) == emas:
-                            print(f"{token} bearish")
+                        sorted1 = sorted(emas.items(), key=lambda x: x[1], reverse=True)
+                        sorted2 = list(map(lambda x: x[0], sorted1))
+
+                        print(f"{token}: EMA: {time_interval_instance.candle_time_interval}: {sorted2}")
+                        ## Test if emas are bullish
+                        #if sorted(emas, reverse=True) == emas:
+                        #    print(f"{token} bullish")
+                        #elif sorted(emas) == emas:
+                        #    print(f"{token} bearish")
 
                     
 
