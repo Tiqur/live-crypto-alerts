@@ -1,9 +1,8 @@
 # Coins to watch
 watchlist: ['DOGEUSDT']
 
-# Amount of data relative to maximum interval to download. ( max_interval * precision )
-# So if max_interval equals 55 and precision equals 2, then it would download 110 records for each interval
-precision: 4
+# Amount of data relative to maximum interval to download. ( max_interval + precision )
+precision: 20
 
 # Time intervals to watch token
 time_intervals:
