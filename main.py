@@ -47,7 +47,7 @@ with open('config.yml', 'r') as ymlfile:
         print(f"Downloading data for {token}...")
 
         progress_bar = Bar('', 
-                max=(len(config['time_intervals']) * len(config['ema_intervals'])),
+                max=(len(config['time_intervals']) * len(config['ema_intervals']) + len(config['time_intervals'])),
                 fill='█',
                 suffix='%(percent).1f%% - %(eta)ds')
 

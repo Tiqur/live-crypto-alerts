@@ -30,6 +30,9 @@ History: {self.time_interval_instances}\n
         # Download data for each time_range and moving average range
         for time_range in self.time_ranges:
 
+            # Fill progress bar
+            self.progress_bar.next()
+
             # Initialize interval history
             ih = TimeInterval(time_range)
 

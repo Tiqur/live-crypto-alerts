@@ -86,12 +86,15 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                         s = sorted(emas.items(), key=lambda x: x[1], reverse=True)
                         current4ma = list(map(lambda x: x[0], s))
 
-
-                        
                         # If 4ema changes, send alert
                         if time_interval_instance.last_4ma != current4ma:
-                            alerts.append({"type": "alert", "token": token, "time": str(datetime.datetime.now(datetime.timezone.utc)), "interval": time_interval_instance.candle_time_interval, "4ma": current4ma})
                             time_interval_instance.last_4ma = current4ma
+
+                            # Prevent false alert on startup
+                            if time_interval_instance.first:
+                                time_interval_instance.first = False
+                            else:
+                                alerts.append({"type": "alert", "token": token, "time": str(datetime.datetime.now(datetime.timezone.utc)), "interval": time_interval_instance.candle_time_interval, "4ma": current4ma})
 
 
 
