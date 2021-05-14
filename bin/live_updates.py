@@ -37,7 +37,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                 token = data["symbol"]
 
                 # Price alerts
-                alerts.append({"type": "price", "token": token, "price": float(ohlcv.close), "time": time.time()})
+                alerts.append({"type": "price", "token": token, "price": str(ohlcv.close), "time": time.time()})
                 
                 # For each token
                 if token in token_instances:
