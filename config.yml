@@ -1,5 +1,5 @@
 # Coins to watch
-watchlist: ['DOGEUSDT']
+watchlist: ['DOGEUSDT', 'MATICUSDT', 'ETCUSDT', 'ETHUSDT']
 
 # Amount of data relative to maximum interval to download. ( max_interval + precision )
 precision: 1000

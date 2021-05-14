@@ -83,22 +83,17 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                             emas.update({moving_average_instance.ma_interval: ema})
                             #print(f"{moving_average_instance.ma_interval}: {round(ema, 5)}")
 
-                        sorted1 = sorted(emas.items(), key=lambda x: x[1], reverse=True)
-                        sorted2 = list(map(lambda x: x[0], sorted1))
+                        s = sorted(emas.items(), key=lambda x: x[1], reverse=True)
+                        current4ma = list(map(lambda x: x[0], s))
 
 
-                        # Test if emas are bullish
-                        if sorted(sorted2) == sorted2:
-                            # Current time in seconds
-                            current_time = time.time()
-
-                            if time_interval_instance.flag == 0:
-                                time_interval_instance.flag = 1
-                                alerts.append({"type": "alert","token": token, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
-                                print(f" BULLISH {token}: Time: {current_time} Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
-                        else:
-                            time_interval_instance.flag = 0
                         
+                        # If 4ema changes, send alert
+                        if time_interval_instance.last_4ma != current4ma:
+                            alerts.append({"type": "alert", "token": token, "time": time.time(), "interval": time_interval_instance.candle_time_interval, "4ma": current4ma})
+                            time_interval_instance.last_4ma = current4ma
+
+
 
 
 
