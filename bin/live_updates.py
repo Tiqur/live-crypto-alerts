@@ -3,7 +3,7 @@ from decimal import Decimal
 from indicators.ema import *
 from bin.ohlcv import *
 import numpy as np
-import time
+import datetime
 
 
 def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, alerts):
@@ -37,7 +37,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                 token = data["symbol"]
 
                 # Price alerts
-                alerts.append({"type": "price", "token": token, "price": str(ohlcv.close), "time": time.time()})
+                alerts.append({"type": "price", "token": token, "price": str(ohlcv.close), "time": str(datetime.datetime.now(datetime.timezone.utc))})
                 
                 # For each token
                 if token in token_instances:
@@ -90,7 +90,7 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                         
                         # If 4ema changes, send alert
                         if time_interval_instance.last_4ma != current4ma:
-                            alerts.append({"type": "alert", "token": token, "time": time.time(), "interval": time_interval_instance.candle_time_interval, "4ma": current4ma})
+                            alerts.append({"type": "alert", "token": token, "time": str(datetime.datetime.now(datetime.timezone.utc)), "interval": time_interval_instance.candle_time_interval, "4ma": current4ma})
                             time_interval_instance.last_4ma = current4ma
 
 
