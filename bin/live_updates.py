@@ -87,12 +87,6 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                         sorted2 = list(map(lambda x: x[0], sorted1))
 
 
-                       # if time_interval_instance.ema4 != sorted2:
-                       #     alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
-                       #     print(f"{token}: Time: {current_time} Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
-                        
-
-
                         # Test if emas are bullish
                         if sorted(sorted2) == sorted2:
                             # Current time in seconds
@@ -105,17 +99,6 @@ def live_updates(intervals, ema_intervals, tokens, exchange, token_instances, al
                         else:
                             time_interval_instance.flag = 0
                         
-
-                        #if sorted(sorted2, reverse=False) == sorted2 and time_interval_instance.flag == 0:
-                        #    time_interval_instance.flag = 1
-                        #    alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
-                        #    print(f" BULLISH {token}: Time: {current_time} Interval: {time_interval_instance.candle_time_interval} 4ma: {sorted2} {emas}")
-
-                        ## Else
-                        #elif time_interval_instance.flag == 1: 
-                        #    time_interval_instance.flag = 0
-                        #    alerts.append({"token": sorted2, "time": current_time, "interval": time_interval_instance.candle_time_interval, "4ma": sorted2, "flag": time_interval_instance.flag})
-                    
 
 
 

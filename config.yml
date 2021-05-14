@@ -2,7 +2,7 @@
 watchlist: ['DOGEUSDT']
 
 # Amount of data relative to maximum interval to download. ( max_interval + precision )
-precision: 20
+precision: 1000
 
 # Time intervals to watch token
 time_intervals:

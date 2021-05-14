@@ -33,22 +33,25 @@ History: {self.time_interval_instances}\n
             # Initialize interval history
             ih = TimeInterval(time_range)
 
+            # Emas rely on previous emas.  Calculate extra for more precision
+            download_range = max(self.ma_ranges) + self.precision
+
+            # Convert binance kline to seconds
+            interval_sec = interval_to_sec(time_range) * download_range
+            historical_data = self.client.get_historical_klines(self.token, time_range, f'{interval_sec} seconds ago UTC')
+            #print(f"\nLen: {len(historical_data)} MaInterval: {ma_range} CandleInterval: {time_range}")
+
             # Optimize downloads by only downloaded the necessary data per token
             for ma_range in self.ma_ranges:
 
                 # Initialize moving average interval instance
                 mai = MovingAverageInterval(ma_range)
 
-                # Emas rely on previous emas.  Calculate extra for more precision
-                download_range = ma_range + self.precision
-
-                # Convert binance kline to seconds
-                interval_sec = interval_to_sec(time_range) * download_range
-                historical_data = self.client.get_historical_klines(self.token, time_range, f'{interval_sec} seconds ago UTC')
-                #print(f"\nLen: {len(historical_data)} MaInterval: {ma_range} CandleInterval: {time_range}")
+                # New data range
+                new_range = historical_data[-(ma_range + self.precision):]
 
                 # Organize data
-                for data in historical_data:
+                for data in new_range:
                     mai.ohlcv.append(Ohlvc(data))
 
                 # Append moving average instance to TimeInterval
